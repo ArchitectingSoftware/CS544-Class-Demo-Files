@@ -27,12 +27,3 @@ $(TARGET): $(OBJFILES)
 
 clean:
 	rm -rf $(BINDIR) $(TARGET)
-
-.PHONY:
-run_server:
-	./$(TARGET) -server -cert_file:./certs/quic_certificate.crt -key_file:./certs/quic_private_key.pem
-
-.PHONY:
-run_client:
-	./$(TARGET) -client -unsecure -target:localhost
-

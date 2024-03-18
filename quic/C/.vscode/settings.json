@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "quichelpers.h": "c",
+        "msquic.h": "c"
+    }
+}
