@@ -1,6 +1,6 @@
 ## Simple Go Echo Demo using QUIC
 
-There are 2 executables:
+There are 2 programs, one for the client and one for the server.  To run:
 
 - `cmd/client`: `go run client.go`
 - `cmd/server`: `go run server.go`
