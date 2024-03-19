@@ -1,0 +1,16 @@
+## Introducing the QUIC Protocol
+
+As a computer scientist studying networking, and hopefully as a practitioner building modern network solutions it is important to be able to understand the anatomy of modern networking protocols with respect to how they are constructed, how they work, and ultimately how to use them in practice.
+
+For our course project we will be digging into one of the most disruptive protocols that has been created and standardized over the past 10+ years.  That protcol is named QUIC, and was created by google to power the HTTP/3 application protocol.  Unfortunately, the innovations associated with the QUIC protocol often take a back door to its killer use case which is version 3 of HTTP.  This term we will be studying QUIC as a general purpose transport protocol, and gaining experience on how to use it. 
+
+The term project will consist of 3 primary deliverables:
+
+- The first deliverable will provide you with some experience on how to learn about new protocols from a technical perspective. You will be creating a technical writeup on the QUIC protocol by learning about it from resources on the Internet, including the various RFCs that make up its specification.  You will identify what you think the problems this protocol was designed to address along with studying various attributes of QUIC including: PDU structure, Addressing, Flow Control, Error Handling, Congestion Control / QoS, Security and State Management.  Full directions are [HERE](../quic-project/P1-ProtocolAnalysisAssignment.pdf)
+
+- The second deliverable will involve you creating a brand new application protocol that will use QUIC as its underlying transport.  Several ideas are provided in the detailed directions.  The main objective of this deliverable will be creating a technical specification like an RFC for your own protocol that will use QUIC.  You will be required to define your own protocol PDUs, message formats, state management, and speak to security implications. Full directions are here: [HERE](../quic-project/P2-ProtocolDesign.pdf)
+
+- The final deliverable will require you to implement a "reasonable" subset of the protocol that you designed in part 2 of the project.  The first part of the implementation is a short writup specifying a bulleted list features that you plan to implement.  The goal of this is to align on "reasonable" to ensure that what you plan to build is a little more involved than trivial, but also to ensure that you are not getting in over your head with an unrealistic amount of work given you will only have around3 weeks to build your implementation. Full directions are [HERE](../quic-project/P3-ProtocolImplementation.pdf)   
+
+### Scaffolded Code Starters
+Since QUIC is still somewhat new, there are a variety of different libraries out there, all having different levels of maturity with respect to implementation and documentation.  To help you out you will see some sample code that I built in a variety of different programming languages that you can use to help get you started. 
