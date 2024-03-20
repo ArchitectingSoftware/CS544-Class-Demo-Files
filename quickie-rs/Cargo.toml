@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "quickie"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "4.5.3", features = ["cargo", "unicode", "env"] }
 color-eyre = "0.6.3"
