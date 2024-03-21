@@ -40,7 +40,7 @@ func main() {
 	}
 
 	req := simpleRequest("hello")
-	pduBytes := pdu.PduToBytes(req)
+	pduBytes, _ := pdu.PduToBytes(req)
 	log.Printf("raw data: %v", pduBytes)
 	_, err = stream.Write(pduBytes)
 	if err != nil {

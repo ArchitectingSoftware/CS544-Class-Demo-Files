@@ -81,7 +81,7 @@ func main() {
 
 					data.SetType(pdu.TYPE_ACK)
 					data.SetData("ack: FromServer Echo-" + data.GetData())
-					rsp := pdu.PduToBytes(data)
+					rsp, _ := pdu.PduToBytes(data)
 
 					_, err = stream.Write(rsp)
 					if err != nil {

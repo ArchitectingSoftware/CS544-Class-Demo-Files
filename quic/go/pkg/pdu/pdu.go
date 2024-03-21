@@ -1,6 +1,9 @@
 package pdu
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 const (
 	// PDU types
@@ -55,6 +58,12 @@ func (pdu *PDU) GetData() string {
 }
 
 func PduFromBytes(raw []byte) (*PDU, error) {
+	pdu := &PDU{}
+	json.Unmarshal(raw, pdu)
+	return pdu, nil
+}
+
+func PduFromBytes2(raw []byte) (*PDU, error) {
 	if len(raw) < 5 {
 		return nil, errors.New("PDU too short")
 	}
@@ -69,7 +78,11 @@ func PduFromBytes(raw []byte) (*PDU, error) {
 	return pdu, nil
 }
 
-func PduToBytes(pdu *PDU) []byte {
+func PduToBytes(pdu *PDU) ([]byte, error) {
+	return json.Marshal(pdu)
+}
+
+func PduToBytes2(pdu *PDU) []byte {
 	raw := make([]byte, 5+pdu.len)
 	raw[0] = pdu.mtype
 	raw[1] = byte(pdu.len >> 24)

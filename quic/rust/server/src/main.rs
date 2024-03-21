@@ -5,7 +5,8 @@ use std::{error::Error, path::Path};
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let mut server = Server::builder()
-        .with_tls((Path::new("cert.pem"), Path::new("key.pem")))?
+        .with_tls((Path::new("./certs/quick_certficate.crt"), 
+                Path::new("./certs/quic_private_key.pem")))?
         .with_io("127.0.0.1:4433")?
         .start()?;
 
