@@ -1,15 +1,20 @@
 use color_eyre::eyre::{eyre, Result, WrapErr};
 use serde::{Deserialize, Serialize};
 
+pub const PROTO_VERSION: u8 = 0x01;
+pub const MSG_TYPE_DATA:u8 = 0x01;
+pub const MSG_TYPE_ACK:u8 = 0x02;
+
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Message {
-  version: isize,
-  length: usize,
+pub struct EchoProtocol {
+  ver: u8,
+  pub mtype: u8,
+  pub msg: String,
 }
 
-impl Message {
-  pub fn new(version: isize, length: usize) -> Self {
-    Self { length, version }
+impl EchoProtocol {
+  pub fn new(mtype: u8, msg: String) -> Self {
+    EchoProtocol { ver:PROTO_VERSION, mtype, msg }
   }
 
   pub fn from_json(raw: &str) -> Result<Self> {
@@ -27,7 +32,8 @@ impl Message {
 
   pub fn to_bytes(&self) -> Result<Vec<u8>> {
     // Implement binary bits here
-    Ok(self.to_json()?.as_bytes().to_owned())
+    //Ok(self.to_json()?.as_bytes().to_owned())
+    Ok(self.to_json()?.into_bytes())
   }
 
   pub fn to_json(&self) -> Result<String> {
@@ -36,11 +42,21 @@ impl Message {
 
     Ok(pretty_json)
   }
+  // Define a method for future use
+  #[allow(dead_code)]
+  pub fn print_debug_msg(&self, msg: &str) {
+    println!("<============ {}\n {} \n==============", 
+      msg, self.to_json().unwrap()); 
+  }
 
+  // Define a method for future use
+  #[allow(dead_code)]
   pub fn to_string(&self) -> String {
     format!("{:#?}", self)
   }
 }
+
+
 
 #[cfg(test)]
 mod tests {
@@ -50,8 +66,9 @@ mod tests {
 
   #[test]
   fn constructor_sanity() {
-    let message = Message::new(1, 42);
+    let message = EchoProtocol::new(1, 
+      "Hello, world!".to_string());
 
-    assert_eq!(message.version, 1);
+    assert_eq!(message.mtype, 1);
   }
 }
