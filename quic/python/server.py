@@ -13,6 +13,7 @@ class QuicEchoProtocol(QuicConnectionProtocol):
         super().__init__(*args, **kwargs)
 
     def quic_event_received(self, event):
+        print("EVENT ", event, "\n")
         if isinstance(event, StreamDataReceived):
             packet_data = event.data.decode('utf-8')
             
@@ -48,7 +49,7 @@ class QuicEchoProtocol(QuicConnectionProtocol):
 async def main():
     # Create QUIC server
     configuration = QuicConfiguration(
-        alpn_protocols=["doq"],
+        alpn_protocols=["echo-protocol"], 
         is_client=False
     )
     configuration.load_cert_chain('./certs/quic_certificate.pem', 

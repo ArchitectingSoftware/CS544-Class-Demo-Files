@@ -34,7 +34,7 @@ class EchoClientProtocol(QuicConnectionProtocol):
 
 async def main():
     # Establish QUIC connection
-    configuration = QuicConfiguration(alpn_protocols=["doq"], 
+    configuration = QuicConfiguration(alpn_protocols=["echo-protocol"], 
                                       is_client=True)
     configuration.load_verify_locations('./certs/quic_certificate.pem')
     

@@ -1,4 +1,4 @@
-package crypto
+package util
 
 import (
 	"crypto/rand"
@@ -6,7 +6,10 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
+	"fmt"
+	"log"
 	"math/big"
+	"os"
 )
 
 func BuildTLSClientConfig() *tls.Config {
@@ -14,6 +17,24 @@ func BuildTLSClientConfig() *tls.Config {
 		InsecureSkipVerify: true,
 		NextProtos:         []string{"quic-echo-example"},
 	}
+}
+
+func BuildTLSClientConfigWithCert(certFile string) (*tls.Config, error) {
+	caCert, err := os.ReadFile(certFile)
+	if err != nil {
+		log.Println("[client] error reading server certificate:", err)
+		return nil, fmt.Errorf("error reading server certificate: %w", err)
+	}
+
+	// Parse the certificate
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+
+	// Create a tls.Config object with the server's certificate
+	return &tls.Config{
+		RootCAs:    caCertPool,
+		NextProtos: []string{"quic-echo-example"},
+	}, nil
 }
 
 func BuildTLSConfig(cert string, key string) (*tls.Config, error) {
