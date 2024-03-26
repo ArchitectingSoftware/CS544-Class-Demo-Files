@@ -22,7 +22,7 @@ def server_mode(args):
     key_file = args.key_file
     
     server_config = quic_server.build_server_quic_config(cert_file, key_file)
-    asyncio.run(echo_server.run_server(listen_address, listen_port, server_config))
+    asyncio.run(quic_server.run_server(listen_address, listen_port, server_config))
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Echo example')

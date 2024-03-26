@@ -1,46 +1,51 @@
 import asyncio
-from aioquic.asyncio import serve
-from aioquic.asyncio.protocol import QuicConnectionProtocol
-from aioquic.quic.configuration import QuicConfiguration
-from aioquic.quic.events import StreamDataReceived
-from typing import Optional
-
-import quic_server
-
+from typing import Coroutine,Dict
 import json
 
+#
+# MESSAGES TAKE THE TYPE OF
+# msg = {
+#     "type": "quic.*",
+#     "message": bytes containing the message,
+#     "more_data": boolean
+# }
+#
 
-
-async def run_server(server, server_port, configuration):
-    # server = 'localhost'
-    # configuration = QuicConfiguration(
-    #     alpn_protocols=["echo-protocol"], 
-    #     is_client=False
-    # )
-    # configuration.load_cert_chain('./certs/quic_certificate.pem', 
-    #                               './certs/quic_private_key.pem')
-    # await serve(server, 4433, configuration=configuration, 
-    #             create_protocol=quic_server.AsyncQuicServer)
-    # await asyncio.Future()
-    
-    await serve(server, server_port, configuration=configuration, 
-            create_protocol=quic_server.AsyncQuicServer,
-            stream_handler=stream_handler)
-    await asyncio.Future()
-    
-    
-async def read_data(reader: asyncio.StreamReader) -> bytes:
-        data = await reader.read()
-        return data
-
-def stream_handler(reader: asyncio.StreamReader, writer:asyncio.StreamWriter):
-        print("STREAM HANDLER", reader, writer)
+async def echo_server_proto(scope:Dict, 
+        receive:Coroutine, send:Coroutine, close:Coroutine):
+        message = await receive()
+        raw_data = message.get("body", b"{}")
+        packet = json.loads(raw_data.decode('utf-8'))
+        print("[svr] received message", packet)
         
-        data = read_data(reader)
-        print("DATA ", data.decode('utf-8'))
-        writer.write(b'Hello World')
-        #data = b''
-        #while not reader.at_eof():
-        #        data += yield from reader.read()
-        #print("DATA ", data.decode('utf-8'))
+        stream_id = message.get("stream_id",-1)
         
+        rsp_msg = {
+                    "stream_type": "error",
+                    "stream_id": stream_id,
+                    "state": "error_state",
+                    "data": "This is an error message"
+                }
+        if packet['stream_type'] == 'cmd':
+                rsp_msg = {
+                        "stream_type": "cmd",
+                        "stream_id": stream_id,
+                        "state": "start_stream_ack",
+                        "data": "This is the cmd stream starting"
+                }
+        elif packet['stream_type'] == 'data':
+                rsp_msg = {
+                        "stream_type": "data",
+                        "stream_id": stream_id,
+                        "state": "start_stream_ack",
+                        "data": "This is the data stream starting"
+                }
+                
+        
+        rsp_msg = json.dumps(rsp_msg).encode('utf-8')
+        await send({
+                "type": "echo.response",
+                "stream_id": stream_id,
+                "message": rsp_msg,
+                "more_data": False
+        })
