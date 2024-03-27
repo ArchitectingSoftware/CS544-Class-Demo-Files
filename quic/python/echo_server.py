@@ -2,14 +2,6 @@ import asyncio
 from typing import Coroutine,Dict
 import json
 
-#
-# MESSAGES TAKE THE TYPE OF
-# msg = {
-#     "type": "quic.*",
-#     "message": bytes containing the message,
-#     "more_data": boolean
-# }
-#
 
 async def echo_server_proto(scope:Dict, 
         receive:Coroutine, send:Coroutine, close:Coroutine):

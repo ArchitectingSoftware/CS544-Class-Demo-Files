@@ -1,9 +1,8 @@
 import argparse
 import asyncio
 from aioquic.quic.configuration import QuicConfiguration
-import quic_client
 import echo_client
-import quic_server
+import quic_engine
 import echo_server
 
 def client_mode(args):
@@ -11,8 +10,8 @@ def client_mode(args):
     server_port = args.port
     cert_file = args.cert_file
     
-    config = quic_client.build_client_quic_config(cert_file)
-    asyncio.run(echo_client.run_client(server_address, server_port, config))
+    config = quic_engine.build_client_quic_config(cert_file)
+    asyncio.run(quic_engine.run_client(server_address, server_port, config))
     
     
 def server_mode(args):
@@ -21,8 +20,8 @@ def server_mode(args):
     cert_file = args.cert_file
     key_file = args.key_file
     
-    server_config = quic_server.build_server_quic_config(cert_file, key_file)
-    asyncio.run(quic_server.run_server(listen_address, listen_port, server_config))
+    server_config = quic_engine.build_server_quic_config(cert_file, key_file)
+    asyncio.run(quic_engine.run_server(listen_address, listen_port, server_config))
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Echo example')
