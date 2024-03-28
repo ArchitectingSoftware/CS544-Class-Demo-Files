@@ -2,40 +2,22 @@ import asyncio
 from typing import Coroutine,Dict
 import json
 from echo_quic import EchoQuicConnection, QuicStreamEvent
+import pdu
 
 
 
 async def echo_server_proto(scope:Dict, conn:EchoQuicConnection):
         
         message:QuicStreamEvent = await conn.receive()
-        raw_data = message.data
-        packet = json.loads(raw_data.decode('utf-8'))
-        print("[svr] received message", packet)
+        
+        dgram_in = pdu.Datagram.from_bytes(message.data)
+        print("[svr] received message: ", dgram_in.msg)
         
         stream_id = message.stream_id
         
-        rsp_msg = {
-                    "stream_type": "error",
-                    "stream_id": stream_id,
-                    "state": "error_state",
-                    "data": "This is an error message"
-                }
-        if packet['stream_type'] == 'cmd':
-                rsp_msg = {
-                        "stream_type": "cmd",
-                        "stream_id": stream_id,
-                        "state": "start_stream_ack",
-                        "data": "This is the cmd stream starting"
-                }
-        elif packet['stream_type'] == 'data':
-                rsp_msg = {
-                        "stream_type": "data",
-                        "stream_id": stream_id,
-                        "state": "start_stream_ack",
-                        "data": "This is the data stream starting"
-                }
-                
-        
-        rsp_msg = json.dumps(rsp_msg).encode('utf-8')
+        dgram_out = dgram_in
+        dgram_out.mtype |= pdu.MSG_TYPE_DATA_ACK
+        dgram_out.msg = "SVR-ACK: " + dgram_out.msg
+        rsp_msg = dgram_out.to_bytes()
         rsp_evnt = QuicStreamEvent(stream_id, rsp_msg, False)
         await conn.send(rsp_evnt)
