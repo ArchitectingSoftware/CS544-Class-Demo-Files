@@ -3,13 +3,14 @@ from aioquic.asyncio import connect, serve
 from aioquic.asyncio.protocol import QuicConnectionProtocol
 from aioquic.quic.configuration import QuicConfiguration
 from aioquic.quic.events import StreamDataReceived
-from typing import Optional, Dict, Callable, Deque, List
+from typing import Optional, Dict, Callable, Coroutine, Deque, List
 from aioquic.tls import SessionTicket
 
 from collections import deque
 
 import json
 
+from echo_quic import EchoQuicConnection, QuicStreamEvent
 import echo_server, echo_client
 
 ALPN_PROTOCOL = "echo-protocol"
@@ -94,9 +95,6 @@ class AsyncQuicServer(QuicConnectionProtocol):
                         
     def is_client(self) -> bool:
         return self._quic.configuration.is_client
-                 
-
-
 
 class SessionTicketStore:
     """
@@ -126,14 +124,6 @@ async def run_client(server, server_port, configuration):
     async with connect(server, server_port, configuration=configuration, 
             create_protocol=AsyncQuicServer) as client:
         await asyncio.ensure_future(client._client_handler.launch_echo())
-    
-    
-    
-    
-    
-async def read_data(reader: asyncio.StreamReader) -> bytes:
-        data = await reader.read()
-        return data
 
         
 class EchoServerRequestHandler:
@@ -151,7 +141,7 @@ class EchoServerRequestHandler:
         self.authority = authority
         self.connection = connection
         self.protocol = protocol
-        self.queue: asyncio.Queue[Dict] = asyncio.Queue()
+        self.queue: asyncio.Queue[QuicStreamEvent] = asyncio.Queue()
         self.scope = scope
         self.stream_id = stream_id
         self.transmit = transmit
@@ -161,33 +151,31 @@ class EchoServerRequestHandler:
         
     def quic_event_received(self, event: StreamDataReceived) -> None:
         self.queue.put_nowait(
-            {
-                "type": "quic.request",
-                "stream_id": event.stream_id,
-                "body": event.data,
-                "more_data": not event.end_stream,
-            }
+            QuicStreamEvent(event.stream_id, event.data, 
+                            event.end_stream)
         )
-    async def receive(self) -> Dict:
-        return await self.queue.get()
+    async def receive(self) -> QuicStreamEvent:
+        queue_item = await self.queue.get()
+        return queue_item
     
-    async def send(self, message: Dict) -> None:
-        print("ABOUT TO SND ", message)
+    async def send(self, message: QuicStreamEvent) -> None:
         self.connection.send_stream_data(
-                stream_id=message.get("stream_id",self.stream_id),
-                data=message.get("message", b""),
-                end_stream=not message.get("more_body", False),
-            )
+                stream_id=message.stream_id,
+                data=message.data,
+                end_stream=message.end_stream
+        )
+        
         self.transmit()
         
     def close(self) -> None:
         self.protocol.remove_handler(self.stream_id)
         self.connection.close()
         
-        
     async def launch_echo(self):
+        qc = EchoQuicConnection(self.send, 
+                self.receive, self.close, None)
         await echo_server.echo_server_proto(self.scope, 
-            self.receive, self.send, self.close)
+            qc)
         
         
 class EchoClientRequestHandler(EchoServerRequestHandler):
@@ -198,7 +186,8 @@ class EchoClientRequestHandler(EchoServerRequestHandler):
         return self.connection.get_next_available_stream_id()
     
     async def launch_echo(self):
-        print('next stream id is ', self.get_next_stream_id())
+        qc = EchoQuicConnection(self.send, 
+                self.receive, self.close, 
+                self.get_next_stream_id)
         await echo_client.echo_client_proto(self.scope, 
-            self.get_next_stream_id,
-            self.receive, self.send, self.close)
+            qc)

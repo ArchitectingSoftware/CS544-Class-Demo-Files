@@ -1,16 +1,18 @@
 import asyncio
 from typing import Coroutine,Dict
 import json
+from echo_quic import EchoQuicConnection, QuicStreamEvent
 
 
-async def echo_server_proto(scope:Dict, 
-        receive:Coroutine, send:Coroutine, close:Coroutine):
-        message = await receive()
-        raw_data = message.get("body", b"{}")
+
+async def echo_server_proto(scope:Dict, conn:EchoQuicConnection):
+        
+        message:QuicStreamEvent = await conn.receive()
+        raw_data = message.data
         packet = json.loads(raw_data.decode('utf-8'))
         print("[svr] received message", packet)
         
-        stream_id = message.get("stream_id",-1)
+        stream_id = message.stream_id
         
         rsp_msg = {
                     "stream_type": "error",
@@ -35,9 +37,5 @@ async def echo_server_proto(scope:Dict,
                 
         
         rsp_msg = json.dumps(rsp_msg).encode('utf-8')
-        await send({
-                "type": "echo.response",
-                "stream_id": stream_id,
-                "message": rsp_msg,
-                "more_data": False
-        })
+        rsp_evnt = QuicStreamEvent(stream_id, rsp_msg, False)
+        await conn.send(rsp_evnt)
