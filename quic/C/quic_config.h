@@ -1,5 +1,5 @@
-#ifndef _QUIC_CONFIG_
-#define _QUIC_CONFIG_
+#ifndef _ECHO_CONFIG_
+#define _ECHO_CONFIG_
 
 #include "msquic.h"
 #include <stdio.h>
@@ -8,48 +8,75 @@
 //QUIC Configuration Information
 #define ALPN_NAME "echo-protocol"
 
-//We commonly use bit fields to represent protocol states
-//                 16  8  4  2  1
-// EP_IDLE          0  0  0  0  0
-// EP_CONNECTED     0  0  0  0  1
-// EP_ECHO          0  0  0  1  0
-// EP_CLOSED        0  0  1  0  0
-// EP_ERROR         0  1  0  0  0
-// EP_ACK           1  0  0  0  0
 
-//ECHO PROTOCOL INFORMATION
-//Protocol States
-typedef uint8_t         ep_mtype_t;
-#define EP_IDLE         0x00
-#define EP_CONNECTED    0x01
-#define EP_ECHO         0x02
-#define EP_CLOSED       0x04
-#define EP_ERROR        0x08
-#define EP_ACK          0x10
-#define EP_STATE_SZ     sizeof(uint8_t)
-
-//ACK IS TO ACKNOLEDGE SO WE CAN COMBINE AND CHECK FOR ITS
-//PRESENCE
-#define EP_CONN_ACK     EP_CONNECTED  | EP_ACK
-#define EP_ECHO_ACK     EP_ECHO_STATE | EP_ACK
-#define EP_CLOSED_ACK   EP_CLOSED     | EP_ACK
-#define IS_ACK(x)       ((x & EP_ACK) == EP_ACK)
-
-typedef struct echo_pdu{
-    ep_mtype_t mtype;
-    uint8_t    mlen;
-    char       msg[256];
-}echo_pdu_t;
 //
-// These variable are expected to be setup by the application
+// The (optional) registration configuration for the app. This sets a name for
+// the app (used for persistent storage and for debugging). It also configures
+// the execution profile, using the default "low latency" profile.
 //
-extern const QUIC_REGISTRATION_CONFIG RegConfig; 
-extern const QUIC_BUFFER Alpn;
-extern const uint16_t UdpPort;
-extern const uint64_t IdleTimeoutMs;
-extern const uint32_t SendBufferLength;
-extern const QUIC_API_TABLE* MsQuic;
-extern HQUIC Registration;
-extern HQUIC Configuration;
+const QUIC_REGISTRATION_CONFIG RegConfig = { ALPN_NAME, QUIC_EXECUTION_PROFILE_LOW_LATENCY };
+
+//
+// The protocol name used in the Application Layer Protocol Negotiation (ALPN).
+//
+const QUIC_BUFFER Alpn = { sizeof(ALPN_NAME) - 1, (uint8_t*)ALPN_NAME };
+
+//
+// The UDP port used by the server side of the protocol.
+//
+const uint16_t UdpPort = 4567;
+
+//
+// The default idle timeout period (1 second) used for the protocol.
+//
+const uint64_t IdleTimeoutMs = 1000;
+
+//
+// The length of buffer sent over the streams in the protocol.
+//
+const uint32_t SendBufferLength = 100;
+
+//
+// The QUIC API/function table returned from MsQuicOpen2. It contains all the
+// functions called by the app to interact with MsQuic.
+//
+const QUIC_API_TABLE* MsQuic;
+
+//
+// The QUIC handle to the registration object. This is the top level API object
+// that represents the execution context for all work done by MsQuic on behalf
+// of the app.
+//
+HQUIC Registration;
+
+//
+// The QUIC handle to the configuration object. This object abstracts the
+// connection configuration. This includes TLS configuration and any other
+// QUIC layer settings.
+//
+HQUIC Configuration;
+
+//Prototype adds due to issues with msquic.h, see below
+
+//See here:  https://github.com/microsoft/msquic/issues/3012
+//Some issue in msquic headers, so we need to define here.  If other exports
+//are misssing they can be found here: 
+// https://github.com/microsoft/msquic/blob/main/src/platform/inline.c
+void
+QuicAddrSetFamily(
+    _In_ QUIC_ADDR* Addr,
+    _In_ QUIC_ADDRESS_FAMILY Family
+    );
+
+uint16_t
+QuicAddrGetPort(
+    _In_ const QUIC_ADDR* const Addr
+    );
+
+void
+QuicAddrSetPort(
+    _Out_ QUIC_ADDR* Addr,
+    _In_ uint16_t Port
+    );
 
 #endif

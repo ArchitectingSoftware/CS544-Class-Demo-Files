@@ -9,10 +9,12 @@
 #include "msquic.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "quic_client.h"
 #include "quichelpers.h"
-#include "quic_config.h"
+#include "echo_config.h"
+#include "echo_proto.h"
 
 
 //
@@ -25,7 +27,18 @@ QUIC_STATUS ClientStreamCallback(
     )
 {
     UNREFERENCED_PARAMETER(Context);
+    int rc = 0;
     switch (Event->Type) {
+    case QUIC_STREAM_EVENT_START_COMPLETE:
+        printf("[strm][%p] Stream started\n", Stream);
+
+        rc = set_proto_state(Stream, EP_ECHO);
+        if (rc != 0) {
+            printf("[hmap] error inserting connection key...\n");
+        }
+        printf("[hmap] state set to EP_ECHO...\n");  
+
+        break;
     case QUIC_STREAM_EVENT_SEND_COMPLETE:
         //
         // A previous StreamSend call has completed, and the context is being
@@ -33,23 +46,48 @@ QUIC_STATUS ClientStreamCallback(
         //
         free(Event->SEND_COMPLETE.ClientContext);
         printf("[strm][%p] Data sent\n", Stream);
+
+        rc = set_proto_state(Stream, EP_ECHO | EP_CLOSED);
+        if (rc != 0) {
+            printf("[hmap] error changing state to EP_ECHO | EP_CLOSED..\n");
+        }
+        printf("[hmap] state set to EP_ECHO or EP_CLOSED...\n");  
         break;
     case QUIC_STREAM_EVENT_RECEIVE:
         //
         // Data was received from the peer on the stream.
         //
         printf("[strm][%p] Data received\n", Stream);
+
+        rc = set_proto_state(Stream, EP_ECHO);
+        if (rc != 0) {
+            printf("[hmap] error changing state to EP_ECHO...\n");
+        }
+        printf("[hmap] state set to EP_ECHO\n"); 
+
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_ABORTED:
         //
         // The peer gracefully shut down its send direction of the stream.
         //
         printf("[strm][%p] Peer aborted\n", Stream);
+
+        rc = set_proto_state(Stream, EP_CLOSED);
+        if (rc != 0) {
+            printf("[hmap] error changing state to EP_CLOSED...\n");
+        }
+        printf("[hmap] state set to EP_CLOSED\n"); 
+
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN:
         //
         // The peer aborted its send direction of the stream.
         //
+        rc = set_proto_state(Stream, EP_CLOSED);
+        if (rc != 0) {
+            printf("[hmap] error changing state to EP_CLOSED...\n");
+        }
+        printf("[hmap] state set to EP_CLOSED\n"); 
         printf("[strm][%p] Peer shut down\n", Stream);
         break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
@@ -57,6 +95,11 @@ QUIC_STATUS ClientStreamCallback(
         // Both directions of the stream have been shut down and MsQuic is done
         // with the stream. It can now be safely cleaned up.
         //
+        rc = remove_proto_state(Stream);
+        if (rc != 0) {
+            printf("[hmap] error removing stream key...\n");
+        }
+        printf("[hmap] stream key removed, state is EP_NO_STATE...\n");
         printf("[strm][%p] All done\n", Stream);
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->StreamClose(Stream);
@@ -83,16 +126,25 @@ ClientSend(
     // Create/allocate a new bidirectional stream. The stream is just allocated
     // and no QUIC stream identifier is assigned until it's started.
     //
+     
     printf("[conn] In client send...\n");
     if (QUIC_FAILED(Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE, ClientStreamCallback, NULL, &Stream))) {
         printf("StreamOpen failed, 0x%x!\n", Status);
         goto Error;
     }
+    int rc = get_proto_state(Stream);
+    if (rc != EP_NO_STATE) {
+        printf("[hmap] error stream has existing state\n");
+        goto Error;
+    }
+    printf("[hmap] new stream OK, state is EP_NO_STATE\n");
 
+    rc = set_proto_state(Stream, EP_IDLE);
+    if (rc != 0) {
+        printf("[hmap] error changing state to EP_IDLE...\n");
+    }
+    printf("[hmap] state set to EP_IDLE\n");
     printf("[strm][%p] Starting...\n", Stream);
-
-    uint8_t current_echo_state = get_proto_state(Connection);
-    printf("[hmap] proto_state is %d\n", current_echo_state);
 
     //
     // Starts the bidirectional stream. By default, the peer is not notified of
@@ -103,6 +155,11 @@ ClientSend(
         MsQuic->StreamClose(Stream);
         goto Error;
     }
+    rc = set_proto_state(Stream, EP_CONNECTED);
+    if (rc != 0) {
+        printf("[hmap] error changing state to EP_CONNECTED...\n");
+    }
+    printf("[hmap] state set to EP_CONNECTED\n");
 
     //
     // Allocates and builds the buffer to send over the stream.
@@ -152,13 +209,7 @@ QUIC_STATUS ClientConnectionCallback(
         //
         // The handshake has completed for the connection.
         //
-        printf("[conn][%p] Connected\n", Connection);
-
-        int rc = set_proto_state(Connection, EP_CONNECTED);
-        if (rc != 0) {
-            printf("[hmap] error inserting connection key...\n");
-        }
-        printf("[hmap] state set to connected...\n");   
+        printf("[conn][%p] Connected\n", Connection); 
 
         ClientSend(Connection);
         break;

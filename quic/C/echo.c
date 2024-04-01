@@ -14,7 +14,7 @@
 #include "quichelpers.h"
 #include "quic_client.h"
 #include "quic_server.h"
-#include "echo_config.h"
+#include "quic_config.h"
 
 int
 QUIC_MAIN_EXPORT

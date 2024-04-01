@@ -13,7 +13,7 @@
 
 #include "quic_server.h"
 #include "quichelpers.h"
-#include "quic_config.h"
+#include "echo_config.h"
 
 //
 // Allocates and sends some data over a QUIC stream.

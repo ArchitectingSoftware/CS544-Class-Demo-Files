@@ -19,3 +19,4 @@ uint32_t DecodeHexBuffer(const char* HexBuffer, uint32_t OutBufferLen, uint8_t* 
 uint8_t init_proto_state(uint32_t initial_size);
 uint8_t get_proto_state(HQUIC Connection);
 int set_proto_state(HQUIC Connection, uint8_t state);
+int remove_proto_state(HQUIC Connection);
