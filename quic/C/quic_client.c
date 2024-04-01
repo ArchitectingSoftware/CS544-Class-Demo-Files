@@ -61,6 +61,7 @@ QUIC_STATUS ClientStreamCallback(
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->StreamClose(Stream);
         }
+        printf("[strm][%p] Stream closed\n", Stream);
         break;
     default:
         break;
@@ -195,10 +196,10 @@ QUIC_STATUS ClientConnectionCallback(
         // received from the server.
         //
         printf("[conn][%p] Resumption ticket received (%u bytes):\n", Connection, Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength);
-        for (uint32_t i = 0; i < Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength; i++) {
-            printf("%.2X", (uint8_t)Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket[i]);
-        }
-        printf("\n");
+        //for (uint32_t i = 0; i < Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength; i++) {
+        //    printf("%.2X", (uint8_t)Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket[i]);
+        //}
+        //printf("\n");
         break;
     default:
         break;
@@ -352,6 +353,7 @@ RunClient(
         printf("ConnectionStart failed, 0x%x!\n", Status);
         goto Error;
     }
+    printf("[conn][%p] Connectection ended\n", Connection);
 
 Error:
 
