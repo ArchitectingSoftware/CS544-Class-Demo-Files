@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _ECHO_CONFIG_
+#define _ECHO_CONFIG_
 
 #include "msquic.h"
 #include <stdio.h>
@@ -6,6 +7,7 @@
 
 //QUIC Configuration Information
 #define ALPN_NAME "echo-protocol"
+
 
 //
 // The (optional) registration configuration for the app. This sets a name for
@@ -25,9 +27,9 @@ const QUIC_BUFFER Alpn = { sizeof(ALPN_NAME) - 1, (uint8_t*)ALPN_NAME };
 const uint16_t UdpPort = 4567;
 
 //
-// The default idle timeout period (1 second) used for the protocol.
+// The default idle timeout period (60 second) used for the protocol.
 //
-const uint64_t IdleTimeoutMs = 1000;
+const uint64_t IdleTimeoutMs = 60 * 1000;
 
 //
 // The length of buffer sent over the streams in the protocol.
@@ -76,3 +78,5 @@ QuicAddrSetPort(
     _Out_ QUIC_ADDR* Addr,
     _In_ uint16_t Port
     );
+
+#endif

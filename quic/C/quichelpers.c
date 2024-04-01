@@ -1,6 +1,44 @@
 #include "msquic.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "hashmap.h"
+#include "quichelpers.h"
+#include "quic_config.h"
+
+
+
+
+static struct hashmap_s hashmap;
+
+uint8_t init_proto_state(uint32_t initial_size) {
+    return hashmap_create(initial_size, &hashmap);
+}
+uint8_t get_proto_state(HQUIC Connection) {
+    //GET PROTOCOL STATE FROM HASHMAP
+    uintptr_t pval = (uintptr_t)EP_ERROR;
+    void *pstate = hashmap_get(&hashmap, Connection, sizeof(Connection)); 
+    if ( pstate == NULL ) {
+        printf("[hmap] error getting protocol state...\n");
+    } else {
+        pval= (uintptr_t)pstate;
+        printf("[hmap] protocol state = %ld\n", pval);   
+    }
+    return (uint8_t)pval;
+}
+
+int set_proto_state(HQUIC Connection, uint8_t state) {
+    uintptr_t pval = (uintptr_t)state;
+    int rc = hashmap_put(&hashmap, Connection, 
+        sizeof(Connection), (void *)pval);
+    if (rc != 0) {
+        printf("[hmap] error inserting connection key...\n");
+    } else {
+        printf("[hmap] state set to %02x ...\n", state); 
+    }
+    return rc;
+}
+
+
 //
 // Helper functions to look up a command line arguments.
 //

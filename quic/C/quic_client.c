@@ -90,6 +90,9 @@ ClientSend(
 
     printf("[strm][%p] Starting...\n", Stream);
 
+    uint8_t current_echo_state = get_proto_state(Connection);
+    printf("[hmap] proto_state is %d\n", current_echo_state);
+
     //
     // Starts the bidirectional stream. By default, the peer is not notified of
     // the stream being started until data is sent on the stream.
@@ -149,6 +152,13 @@ QUIC_STATUS ClientConnectionCallback(
         // The handshake has completed for the connection.
         //
         printf("[conn][%p] Connected\n", Connection);
+
+        int rc = set_proto_state(Connection, EP_CONNECTED);
+        if (rc != 0) {
+            printf("[hmap] error inserting connection key...\n");
+        }
+        printf("[hmap] state set to connected...\n");   
+
         ClientSend(Connection);
         break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
@@ -288,6 +298,15 @@ RunClient(
         printf("ClientLoadConfiguration Unsecure Flag Early Exit!\n");
         return;
     }
+
+    //Create protocol hashmap
+    const unsigned initial_size = 2;
+    int rc = init_proto_state(initial_size);
+    if (rc != 0) {
+        printf("[hmap] error creating hashmap, exiting...\n");
+        return;
+    }
+    printf("[hmap] hashmap created...\n");
 
     QUIC_STATUS Status;
     const char* ResumptionTicketString = NULL;

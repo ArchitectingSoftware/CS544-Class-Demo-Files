@@ -16,10 +16,6 @@ GetValue(int argc,char* argv[],const char* name);
 uint8_t DecodeHexChar(char c);
 uint32_t DecodeHexBuffer(const char* HexBuffer, uint32_t OutBufferLen, uint8_t* OutBuffer);
 
-
-#ifndef QUIC_PROTO_FIX
-
-#define QUIC_PROTO_FIX
-
-
-#endif
+uint8_t init_proto_state(uint32_t initial_size);
+uint8_t get_proto_state(HQUIC Connection);
+int set_proto_state(HQUIC Connection, uint8_t state);

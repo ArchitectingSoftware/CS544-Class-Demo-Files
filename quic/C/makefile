@@ -3,7 +3,13 @@ CFLAGS := -Wall -Wextra -g
 
 #On Macos at least make sure -rpath is set to /usr/local/lib or wherever
 #the libmsquic.dylib is installed
-LDFLAGS :=  -lmsquic -lm -lpthread  -rpath /usr/local/lib
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+  LDFLAGS :=  -lmsquic -lm -lpthread  -rpath /usr/local/lib
+endif
+ifeq ($(UNAME_S),Linux)
+	LDFLAGS :=  -lmsquic -lm -lpthread  
+endif
 
 SRCDIR := .
 BINDIR := bin
