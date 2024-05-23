@@ -1,9 +1,10 @@
 ## Simple Go Echo Demo using QUIC
 
-There are 2 programs, one for the client and one for the server.  To run:
+There is a single binary that is used to run both the client and the server
 
-- `cmd/client`: `go run client.go`
-- `cmd/server`: `go run server.go`
+- `server`: `go run cmd/echo/echo.go -server`
+- `client`: `go run cmd/echo/echo.go -client`
+- `help on all flags`: `go run cmd/echo/echo.go -help`
 
 The server will wait for a connection, just a simple echo.  This solution uses goroutines and is concurrent.
 

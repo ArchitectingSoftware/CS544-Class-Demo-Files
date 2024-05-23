@@ -114,6 +114,8 @@ func (s *Server) protocolHandler(stream quic.Stream) error {
 		Data:  []byte(rspMsg),
 	}
 
+	fmt.Printf("Server-> %v", rspPdu)
+
 	rspBytes, err := pdu.PduToBytes(&rspPdu)
 	if err != nil {
 		log.Printf("[server] Error encoding PDU: %s", err)

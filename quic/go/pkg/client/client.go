@@ -88,7 +88,9 @@ func (c *Client) protocolHandler() error {
 		log.Printf("[cli] error converting pdu from bytes %s", err)
 		return err
 	}
+	rspDataString := string(rsp.Data)
 	log.Printf("[cli] got response: %s", rsp.ToJsonString())
+	log.Printf("[cli] decoded string: %s", rspDataString)
 
 	return stream.Close()
 }
