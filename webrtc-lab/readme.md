@@ -15,3 +15,11 @@ This is a self directed lab.  What you get out of it will be related to what you
 
 3. Now that you have done some self-directed learning its time to show me what you know - haha.  I have provided a study guide to help you prepare for the online quiz.   Open up and review [web-rtc-study-guide.md](./web-rtc-study-guide.md).  
 
+    - Which of the following statements BEST describes the primary goal and a key characteristic of WebRTC technology?
+    - Which of the following statements BEST describes the interplay between ICE (Interactive Connectivity Establishment) and SDP (Session Description Protocol) in establishing a WebRTC peer-to-peer connection?
+    - Which of the following BEST explains why a Traversal Using Relays around NAT (TURN) server might be necessary in a WebRTC connection, and why direct peer-to-peer connections (without TURN) are generally preferred?
+    - Which of the following is a PRIMARY benefit of WebRTC's peer-to-peer architecture for real-time communication compared to a traditional client-server model?
+    - Which of the following statements BEST distinguishes the typical roles and characteristics of RTP and SCTP in a WebRTC peer-to-peer connection?
+    - Which of the following BEST explains why WebRTC is implemented as a collection of various protocols (like ICE, SDP, RTP, SCTP) rather than a single, unified protocol (e.g., UDP, TCP, IP, HTTP, Ethernet)?
+    - Which of the following BEST explains the primary reason why RTP (the sub-protocol for real-time media in WebRTC) is typically implemented over UDP in the Application Layer rather than directly into the Transport Layer as an alternative to using UDP or TCP?
+    - Which of the following BEST explains why WebRTC typically uses separate channels (e.g., RTP for video and SCTP for data channels) for transmitting video and other types of data?
