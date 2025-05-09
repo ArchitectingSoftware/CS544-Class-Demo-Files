@@ -32,3 +32,6 @@ Temporary Items
 *.cer
 *.der
 *.priv
+
+
+.env
