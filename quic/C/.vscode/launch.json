@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/echo",
-            "args": ["-client", "-target:localhost" ],
+            "args": ["-client", "-unsecure","-target:localhost" ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

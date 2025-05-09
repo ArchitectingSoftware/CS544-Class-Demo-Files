@@ -13,8 +13,8 @@
 
 #include "quic_client.h"
 #include "quichelpers.h"
-#include "echo_config.h"
-#include "echo_proto.h"
+#include "quic_config.h"
+#include "echo_client.h"
 
 
 //
@@ -113,7 +113,7 @@ QUIC_STATUS ClientStreamCallback(
 }
 
 void
-ClientSend(
+ClientSend2(
     HQUIC Connection
     )
 {

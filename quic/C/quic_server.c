@@ -121,6 +121,7 @@ ServerConnectionCallback(
         //
         // The handshake has completed for the connection.
         //
+        
         printf("[conn][%p] Connected\n", Connection);
         MsQuic->ConnectionSendResumptionTicket(Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
         break;
