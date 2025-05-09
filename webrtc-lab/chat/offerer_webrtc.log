@@ -1,0 +1,185 @@
+2025-05-08 12:25:38,846 | offerer | INFO | INIT | Starting WebRTC Offerer
+2025-05-08 12:25:38,878 | offerer | INFO | RTC | Creating data channel "chat"
+2025-05-08 12:25:38,880 | offerer | INFO | SDP | Creating offer
+2025-05-08 12:25:38,880 | offerer | DEBUG | SDP | Created offer SDP:
+v=0
+o=- 3955710338 3955710338 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=group:BUNDLE 0
+a=msid-semantic:WMS *
+m=application 9 DTLS/SCTP 5000
+c=IN IP4 0.0.0.0
+a=mid:0
+a=sctpmap:5000 webrtc-datachannel 65535
+a=max-message-size:65536
+a=ice-ufrag:6OOq
+a=ice-pwd:gZ8bK5I5U6vkgGwvHeNhJQ
+a=fingerprint:sha-256 CD:89:E1:E3:5D:E4:21:C5:EF:D4:BB:61:69:39:CB:C7:A7:E7:6E:3F:97:14:0D:D7:0E:24:70:DC:A7:B5:0F:01
+a=fingerprint:sha-384 AA:C4:46:95:FB:44:08:14:B5:D1:AE:0C:1F:32:FC:D8:AE:33:49:09:B5:74:82:BC:A8:2A:36:93:E0:75:A5:82:BB:EB:C6:FE:FD:C8:FC:87:84:3E:90:93:94:06:52:F6
+a=fingerprint:sha-512 8A:BB:40:74:DF:D6:4D:26:63:19:52:93:13:76:EC:56:C3:88:F3:08:D7:B3:3D:3C:9D:E9:21:89:59:EB:85:82:3E:D6:E6:B5:E2:D8:FB:1D:D4:65:76:C4:3F:57:9D:DE:AB:25:D2:78:D0:71:61:71:2A:59:E8:0E:FD:E0:53:A4
+a=setup:actpass
+
+2025-05-08 12:25:38,882 | offerer | INFO | ICE | ICE gathering state changed to: gathering
+2025-05-08 12:25:43,883 | offerer | INFO | ICE | ICE gathering state changed to: complete
+2025-05-08 12:25:43,884 | offerer | INFO | SDP | Local description (offer) set
+2025-05-08 12:25:43,891 | offerer | INFO | SIGNALING | Offer written to offer.json
+2025-05-08 12:26:22,942 | offerer | INFO | SIGNALING | Answer file detected
+2025-05-08 12:26:22,963 | offerer | DEBUG | SDP | Received answer SDP:
+v=0
+o=- 3955710377 3955710377 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=group:BUNDLE 0
+a=msid-semantic:WMS *
+m=application 57242 DTLS/SCTP 5000
+c=IN IP4 192.168.50.196
+a=mid:0
+a=sctpmap:5000 webrtc-datachannel 65535
+a=max-message-size:65536
+a=candidate:a64b895ddb11468d3642a6e1ddda4e9b 1 udp 2130706431 192.168.50.196 57242 typ host
+a=candidate:dd3577a654c8301af7b989e88eaf890b 1 udp 2130706431 198.19.249.3 53672 typ host
+a=candidate:79a99f7adf90e7bfbf9c99718e5b7503 1 udp 2130706431 fd07:b51a:cc66:0:a617:db5e:ab7:e9f1 49381 typ host
+a=candidate:767a6f3d0685234fe7cdb00d91efa124 1 udp 1694498815 98.115.0.59 57242 typ srflx raddr 192.168.50.196 rport 57242
+a=end-of-candidates
+a=ice-ufrag:zQQi
+a=ice-pwd:fEvW1aizJwRzbEK0BABWH7
+a=fingerprint:sha-256 47:8A:84:3D:A2:27:42:C4:18:6F:EF:B7:38:5F:7A:35:0A:F4:4A:CB:FF:CC:1F:62:5F:FA:6F:CD:B4:E4:67:42
+a=fingerprint:sha-384 97:DA:7F:B9:82:E6:C8:B3:A6:CA:E9:34:EB:8E:4F:D8:22:3F:7F:54:4D:59:DA:4A:F8:86:E9:39:40:53:3C:C7:46:E6:79:F3:00:2D:21:81:52:70:F0:A8:BB:F5:76:71
+a=fingerprint:sha-512 E3:68:45:67:0E:11:4D:46:FB:DB:EA:86:F3:FC:DA:17:FE:37:56:DB:6F:1B:8E:A9:F9:D8:0A:F3:10:CC:8C:32:C5:6C:54:45:40:2A:32:DD:F3:F9:B1:74:BB:F0:6C:52:7B:30:74:6E:4E:77:17:AC:FD:4E:04:3E:36:33:70:52
+a=setup:active
+
+2025-05-08 12:26:22,965 | offerer | INFO | SDP | Remote description (answer) set
+2025-05-08 12:26:22,966 | offerer | INFO | ICE | ICE connection state changed to: checking
+2025-05-08 12:26:22,966 | offerer | INFO | RTC | Connection state changed to: connecting
+2025-05-08 12:26:22,999 | offerer | INFO | ICE | ICE connection state changed to: completed
+2025-05-08 12:26:23,006 | offerer | INFO | RTC | Connection state changed to: connected
+2025-05-08 12:26:23,008 | offerer | INFO | DATACHANNEL | Data channel opened
+2025-05-08 12:26:27,059 | offerer | DEBUG | DATACHANNEL | Received message: hi
+2025-05-08 12:26:30,021 | offerer | DEBUG | DATACHANNEL | Received message: how are you
+2025-05-08 12:26:34,710 | offerer | DEBUG | DATACHANNEL | Sending message: good
+2025-05-08 12:26:36,960 | offerer | INFO | DATACHANNEL | User requested exit
+2025-05-08 12:26:36,961 | offerer | INFO | DATACHANNEL | Data channel closed
+2025-05-08 19:11:47,914 | offerer | INFO | INIT | Starting WebRTC Offerer
+2025-05-08 19:11:47,979 | offerer | INFO | RTC | Creating data channel "chat"
+2025-05-08 19:11:47,981 | offerer | INFO | SDP | Creating offer
+2025-05-08 19:11:47,981 | offerer | DEBUG | SDP | Created offer SDP:
+v=0
+o=- 3955734707 3955734707 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=group:BUNDLE 0
+a=msid-semantic:WMS *
+m=application 9 DTLS/SCTP 5000
+c=IN IP4 0.0.0.0
+a=mid:0
+a=sctpmap:5000 webrtc-datachannel 65535
+a=max-message-size:65536
+a=ice-ufrag:0QRy
+a=ice-pwd:rSvRPIEtIqLvjflKhehDZp
+a=fingerprint:sha-256 83:D4:F0:C5:49:B3:AA:E6:B0:BB:AC:59:D8:CE:47:9D:3F:64:2C:26:0A:CA:66:C0:4C:F2:A4:A0:FE:38:CE:22
+a=fingerprint:sha-384 89:4F:11:15:38:7D:BE:61:A4:98:DC:A4:00:8D:22:C3:8E:21:BB:76:CB:F6:65:D3:92:DF:E0:E8:23:83:77:0E:A0:70:96:3B:1C:7B:5D:39:B8:E6:CD:6B:89:61:87:D8
+a=fingerprint:sha-512 B7:E2:A7:42:A1:18:B4:5A:F1:F6:54:FD:08:3B:52:92:9D:78:AA:6A:5F:99:C1:DD:3B:F8:CA:DD:13:35:7A:1E:B5:FF:E6:F1:C7:1A:91:58:E8:F5:26:62:1A:62:BC:FB:B3:A6:4A:F4:92:7A:52:40:AF:BE:6F:F1:59:2A:E9:4E
+a=setup:actpass
+
+2025-05-08 19:11:47,983 | offerer | INFO | ICE | ICE gathering state changed to: gathering
+2025-05-08 19:11:52,986 | offerer | INFO | ICE | ICE gathering state changed to: complete
+2025-05-08 19:11:52,987 | offerer | INFO | SDP | Local description (offer) set
+2025-05-08 19:11:52,989 | offerer | INFO | SIGNALING | Offer written to offer.json
+2025-05-08 19:12:16,026 | offerer | INFO | SIGNALING | Answer file detected
+2025-05-08 19:12:16,039 | offerer | DEBUG | SDP | Received answer SDP:
+v=0
+o=- 3955734730 3955734730 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=group:BUNDLE 0
+a=msid-semantic:WMS *
+m=application 55887 DTLS/SCTP 5000
+c=IN IP4 10.250.22.241
+a=mid:0
+a=sctpmap:5000 webrtc-datachannel 65535
+a=max-message-size:65536
+a=candidate:80fc749e5187364477d41f85b30002b3 1 udp 2130706431 10.250.22.241 55887 typ host
+a=candidate:dd3577a654c8301af7b989e88eaf890b 1 udp 2130706431 198.19.249.3 54000 typ host
+a=candidate:79a99f7adf90e7bfbf9c99718e5b7503 1 udp 2130706431 fd07:b51a:cc66:0:a617:db5e:ab7:e9f1 55220 typ host
+a=candidate:b232b31c5355c64307348abec58f3565 1 udp 1694498815 144.118.77.35 1103 typ srflx raddr 10.250.22.241 rport 55887
+a=end-of-candidates
+a=ice-ufrag:zYNO
+a=ice-pwd:C4RkGNIjfh8tcIeSIgjLgS
+a=fingerprint:sha-256 13:8C:B5:E4:D4:82:D6:7B:44:9E:F7:FD:73:52:2A:AC:BA:9D:90:5C:AD:AF:37:E0:66:95:94:C8:39:B9:40:AD
+a=fingerprint:sha-384 E2:8D:E6:CD:CE:AA:A8:31:9C:45:AD:9C:62:60:14:FD:1D:E3:B7:B3:C0:53:76:5F:F8:37:1A:C8:A5:C7:F8:FE:5E:56:55:9C:FB:D0:9B:E3:26:72:16:07:C6:B6:DF:55
+a=fingerprint:sha-512 1B:70:AB:D9:76:66:E9:76:8E:2C:27:65:A8:87:8B:39:9D:28:80:C0:CF:3E:34:17:40:79:48:54:42:94:80:60:27:FF:7E:33:5D:4D:AC:CD:0D:9C:F8:49:9E:43:F2:F6:7E:A7:4A:21:3E:22:2A:FB:51:0F:AD:CB:14:9C:A1:8F
+a=setup:active
+
+2025-05-08 19:12:16,041 | offerer | INFO | SDP | Remote description (answer) set
+2025-05-08 19:12:16,042 | offerer | INFO | ICE | ICE connection state changed to: checking
+2025-05-08 19:12:16,042 | offerer | INFO | RTC | Connection state changed to: connecting
+2025-05-08 19:12:16,065 | offerer | INFO | ICE | ICE connection state changed to: completed
+2025-05-08 19:12:16,070 | offerer | INFO | RTC | Connection state changed to: connected
+2025-05-08 19:12:16,072 | offerer | INFO | DATACHANNEL | Data channel opened
+2025-05-08 19:12:32,503 | offerer | DEBUG | DATACHANNEL | Sending message: HI from offerer
+2025-05-08 19:12:43,544 | offerer | DEBUG | DATACHANNEL | Received message: Hi from answerer
+2025-05-08 19:12:52,239 | offerer | DEBUG | DATACHANNEL | Sending message: isnt this fun
+2025-05-08 19:13:02,007 | offerer | DEBUG | DATACHANNEL | Received message: yes
+2025-05-08 19:13:08,659 | offerer | INFO | DATACHANNEL | Data channel closed
+2025-05-08 19:16:54,741 | offerer | INFO | INIT | Starting WebRTC Offerer
+2025-05-08 19:16:54,757 | offerer | INFO | RTC | Creating data channel "chat"
+2025-05-08 19:16:54,757 | offerer | INFO | SDP | Creating offer
+2025-05-08 19:16:54,757 | offerer | DEBUG | SDP | Created offer SDP:
+v=0
+o=- 3955735014 3955735014 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=group:BUNDLE 0
+a=msid-semantic:WMS *
+m=application 9 DTLS/SCTP 5000
+c=IN IP4 0.0.0.0
+a=mid:0
+a=sctpmap:5000 webrtc-datachannel 65535
+a=max-message-size:65536
+a=ice-ufrag:u7bn
+a=ice-pwd:vApMXxMLdDmPrKklkdr1pZ
+a=fingerprint:sha-256 2D:D4:CE:92:90:6D:FC:43:1F:E4:DD:62:2F:4B:F2:12:10:96:34:83:A9:60:C5:81:D0:25:31:C6:5F:55:B2:6A
+a=fingerprint:sha-384 09:70:D3:C2:6A:F8:22:54:BA:87:FD:D1:6C:01:7E:8B:F6:84:57:F9:0C:68:2C:D4:40:58:58:ED:86:51:BE:FF:51:76:0F:47:A5:B3:5A:0D:D7:BA:CE:88:D4:55:E6:FD
+a=fingerprint:sha-512 16:80:21:9C:28:FB:1F:A4:EA:D9:B7:E8:80:EB:2B:AA:F7:05:18:AF:BF:B8:57:7D:01:77:8A:F4:45:15:9B:FF:84:45:BA:69:B0:2B:B0:53:A9:B2:FF:2F:B1:4A:BB:77:AE:B1:D6:B0:10:48:58:1F:7F:91:5F:34:45:EE:0C:76
+a=setup:actpass
+
+2025-05-08 19:16:54,759 | offerer | INFO | ICE | ICE gathering state changed to: gathering
+2025-05-08 19:16:59,760 | offerer | INFO | ICE | ICE gathering state changed to: complete
+2025-05-08 19:16:59,761 | offerer | INFO | SDP | Local description (offer) set
+2025-05-08 19:16:59,762 | offerer | INFO | SIGNALING | Offer written to offer.json
+2025-05-08 19:28:00,543 | offerer | INFO | SIGNALING | Answer file detected
+2025-05-08 19:28:00,555 | offerer | DEBUG | SDP | Received answer SDP:
+v=0
+o=- 3955735674 3955735674 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=group:BUNDLE 0
+a=msid-semantic:WMS *
+m=application 54946 DTLS/SCTP 5000
+c=IN IP4 10.250.22.241
+a=mid:0
+a=sctpmap:5000 webrtc-datachannel 65535
+a=max-message-size:65536
+a=candidate:80fc749e5187364477d41f85b30002b3 1 udp 2130706431 10.250.22.241 54946 typ host
+a=candidate:dd3577a654c8301af7b989e88eaf890b 1 udp 2130706431 198.19.249.3 50464 typ host
+a=candidate:79a99f7adf90e7bfbf9c99718e5b7503 1 udp 2130706431 fd07:b51a:cc66:0:a617:db5e:ab7:e9f1 49481 typ host
+a=candidate:b232b31c5355c64307348abec58f3565 1 udp 1694498815 144.118.77.35 1058 typ srflx raddr 10.250.22.241 rport 54946
+a=end-of-candidates
+a=ice-ufrag:FPVS
+a=ice-pwd:GBKSDljj2uE8xD1F0LpFhq
+a=fingerprint:sha-256 C4:CA:77:24:AB:6B:D0:F0:AC:45:47:FF:77:74:0F:35:52:25:39:8F:1A:68:72:53:EB:2C:0D:D4:86:AA:07:B9
+a=fingerprint:sha-384 CF:6F:57:7D:AF:AD:FD:C9:13:21:9E:34:98:9B:69:3E:4C:F9:02:91:72:0D:18:42:FD:2E:9F:CE:EC:EC:F4:D7:E3:8F:13:78:B9:0B:5D:B2:E2:78:ED:DA:FF:D8:9D:67
+a=fingerprint:sha-512 06:05:6F:A2:A3:78:0F:05:0F:86:72:A6:04:5D:0F:79:74:73:87:7D:B3:AF:A9:FB:4F:D8:C3:F1:A4:C6:1A:95:2C:16:07:72:DE:4D:FB:70:F3:79:76:D0:FB:C5:D1:9A:C9:5C:CF:02:F7:00:24:EA:09:DC:39:F2:81:4E:07:A2
+a=setup:active
+
+2025-05-08 19:28:00,557 | offerer | INFO | SDP | Remote description (answer) set
+2025-05-08 19:28:00,558 | offerer | INFO | ICE | ICE connection state changed to: checking
+2025-05-08 19:28:00,558 | offerer | INFO | RTC | Connection state changed to: connecting
+2025-05-08 19:28:00,604 | offerer | INFO | ICE | ICE connection state changed to: completed
+2025-05-08 19:28:00,610 | offerer | INFO | RTC | Connection state changed to: connected
+2025-05-08 19:28:00,612 | offerer | INFO | DATACHANNEL | Data channel opened
+2025-05-08 19:30:47,100 | offerer | DEBUG | DATACHANNEL | Sending message: hi
+2025-05-08 19:30:50,673 | offerer | DEBUG | DATACHANNEL | Sending message: how are ypou
+2025-05-08 19:31:02,697 | offerer | INFO | DATACHANNEL | User requested exit
+2025-05-08 19:31:02,698 | offerer | INFO | DATACHANNEL | Data channel closed

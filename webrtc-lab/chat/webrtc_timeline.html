@@ -1,0 +1,615 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>WebRTC Protocol Timeline</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .timeline { position: relative; margin: 20px 0; padding: 20px 0; }
+                .timeline::before { content: ''; position: absolute; top: 0; bottom: 0; width: 4px; background: #ddd; left: 50%; margin-left: -2px; }
+                .timeline-item { padding: 10px 40px; position: relative; background-color: inherit; width: 46%; }
+                .left { left: 0; }
+                .right { left: 50%; }
+                .timeline-item::after { content: ''; position: absolute; width: 16px; height: 16px; right: -8px; background-color: white; border: 4px solid #FF9F55; top: 15px; border-radius: 50%; z-index: 1; }
+                .right::after { left: -8px; }
+                .timeline-content { padding: 20px; background-color: white; border-radius: 6px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+                .protocol-filter { margin: 20px 0; }
+                .protocol-filter button { margin-right: 10px; padding: 5px 10px; border: none; border-radius: 3px; background-color: #eee; cursor: pointer; }
+                .protocol-filter button.active { background-color: #FF9F55; color: white; }
+                .timestamp { color: #999; font-size: 0.8em; }
+                .message { margin-top: 5px; }
+                .source-offerer { border-left: 5px solid #4CAF50; }
+                .source-answerer { border-left: 5px solid #2196F3; }
+                .hidden { display: none; }
+                .legend { margin-top: 20px; display: flex; }
+                .legend-item { margin-right: 20px; display: flex; align-items: center; }
+                .legend-color { width: 20px; height: 20px; margin-right: 5px; }
+                .offerer-color { background-color: #4CAF50; }
+                .answerer-color { background-color: #2196F3; }
+                h3 { margin-bottom: 5px; }
+                .protocol-heading { display: flex; justify-content: space-between; align-items: center; }
+                .protocol-badge { padding: 2px 6px; border-radius: 10px; color: white; font-size: 0.8em; }
+                .protocol-SDP { background-color: #673AB7; }
+                .protocol-ICE { background-color: #3F51B5; }
+                .protocol-DTLS { background-color: #009688; }
+                .protocol-SCTP { background-color: #FF5722; }
+                .protocol-RTP { background-color: #795548; }
+                .protocol-DATACHANNEL { background-color: #607D8B; }
+                .protocol-SIGNALING { background-color: #9C27B0; }
+                .protocol-RTC { background-color: #E91E63; }
+                .protocol-GENERAL { background-color: #9E9E9E; }
+                .timeline-item-details { display: none; margin-top: 10px; }
+                .show-details-btn { background: none; border: none; text-decoration: underline; color: blue; cursor: pointer; }
+            </style>
+        </head>
+        <body>
+            <h1>WebRTC Protocol Timeline</h1>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color offerer-color"></div>
+                    <div>Offerer</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color answerer-color"></div>
+                    <div>Answerer</div>
+                </div>
+            </div>
+            
+            <div class="protocol-filter">
+                <button class="filter-btn active" data-protocol="all">All</button>
+        <button class="filter-btn" data-protocol="DATACHANNEL">DATACHANNEL</button>
+<button class="filter-btn" data-protocol="ICE">ICE</button>
+<button class="filter-btn" data-protocol="INIT">INIT</button>
+<button class="filter-btn" data-protocol="RTC">RTC</button>
+<button class="filter-btn" data-protocol="SDP">SDP</button>
+<button class="filter-btn" data-protocol="SIGNALING">SIGNALING</button>
+
+            </div>
+            
+            <div class="timeline">
+        
+                <div class="timeline-item left data-protocol="INIT">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>INIT</h3>
+                            <span class="protocol-badge protocol-INIT">INIT</span>
+                        </div>
+                        <div class="timestamp">12:25:38.846 - offerer</div>
+                        <div class="message">Starting WebRTC Offerer</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="RTC">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>RTC</h3>
+                            <span class="protocol-badge protocol-RTC">RTC</span>
+                        </div>
+                        <div class="timestamp">12:25:38.878 - offerer</div>
+                        <div class="message">Creating data channel "chat"</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SDP">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:25:38.880 - offerer</div>
+                        <div class="message">Creating offer</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SDP">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:25:38.880 - offerer</div>
+                        <div class="message">Created offer SDP:</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="ICE">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:25:38.882 - offerer</div>
+                        <div class="message">ICE gathering state changed to: gathering</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="ICE">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:25:43.883 - offerer</div>
+                        <div class="message">ICE gathering state changed to: complete</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SDP">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:25:43.884 - offerer</div>
+                        <div class="message">Local description (offer) set</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SIGNALING">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SIGNALING</h3>
+                            <span class="protocol-badge protocol-SIGNALING">SIGNALING</span>
+                        </div>
+                        <div class="timestamp">12:25:43.891 - offerer</div>
+                        <div class="message">Offer written to offer.json</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="INIT">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>INIT</h3>
+                            <span class="protocol-badge protocol-INIT">INIT</span>
+                        </div>
+                        <div class="timestamp">12:26:17.051 - answerer</div>
+                        <div class="message">Starting WebRTC Answerer</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SIGNALING">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SIGNALING</h3>
+                            <span class="protocol-badge protocol-SIGNALING">SIGNALING</span>
+                        </div>
+                        <div class="timestamp">12:26:17.051 - answerer</div>
+                        <div class="message">Waiting for offer.json</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SIGNALING">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SIGNALING</h3>
+                            <span class="protocol-badge protocol-SIGNALING">SIGNALING</span>
+                        </div>
+                        <div class="timestamp">12:26:17.051 - answerer</div>
+                        <div class="message">Offer file detected</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SDP">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:17.053 - answerer</div>
+                        <div class="message">Received offer SDP:</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="RTC">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>RTC</h3>
+                            <span class="protocol-badge protocol-RTC">RTC</span>
+                        </div>
+                        <div class="timestamp">12:26:17.057 - answerer</div>
+                        <div class="message">PeerConnection created</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SDP">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:17.058 - answerer</div>
+                        <div class="message">Remote description (offer) set</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SDP">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:17.058 - answerer</div>
+                        <div class="message">Creating answer</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SDP">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:17.058 - answerer</div>
+                        <div class="message">Created answer SDP:</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="ICE">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:26:17.059 - answerer</div>
+                        <div class="message">ICE gathering state changed to: gathering</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="ICE">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:26:22.062 - answerer</div>
+                        <div class="message">ICE gathering state changed to: complete</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SDP">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:22.063 - answerer</div>
+                        <div class="message">Local description (answer) set</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SIGNALING">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>SIGNALING</h3>
+                            <span class="protocol-badge protocol-SIGNALING">SIGNALING</span>
+                        </div>
+                        <div class="timestamp">12:26:22.072 - answerer</div>
+                        <div class="message">Answer written to answer.json</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="ICE">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:26:22.073 - answerer</div>
+                        <div class="message">ICE connection state changed to: checking</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="RTC">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>RTC</h3>
+                            <span class="protocol-badge protocol-RTC">RTC</span>
+                        </div>
+                        <div class="timestamp">12:26:22.074 - answerer</div>
+                        <div class="message">Connection state changed to: connecting</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SIGNALING">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SIGNALING</h3>
+                            <span class="protocol-badge protocol-SIGNALING">SIGNALING</span>
+                        </div>
+                        <div class="timestamp">12:26:22.942 - offerer</div>
+                        <div class="message">Answer file detected</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="SDP">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:22.963 - offerer</div>
+                        <div class="message">Received answer SDP:</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="SDP">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>SDP</h3>
+                            <span class="protocol-badge protocol-SDP">SDP</span>
+                        </div>
+                        <div class="timestamp">12:26:22.965 - offerer</div>
+                        <div class="message">Remote description (answer) set</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="ICE">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:26:22.966 - offerer</div>
+                        <div class="message">ICE connection state changed to: checking</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="RTC">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>RTC</h3>
+                            <span class="protocol-badge protocol-RTC">RTC</span>
+                        </div>
+                        <div class="timestamp">12:26:22.966 - offerer</div>
+                        <div class="message">Connection state changed to: connecting</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="ICE">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:26:22.999 - offerer</div>
+                        <div class="message">ICE connection state changed to: completed</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="ICE">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>ICE</h3>
+                            <span class="protocol-badge protocol-ICE">ICE</span>
+                        </div>
+                        <div class="timestamp">12:26:23.000 - answerer</div>
+                        <div class="message">ICE connection state changed to: completed</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="RTC">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>RTC</h3>
+                            <span class="protocol-badge protocol-RTC">RTC</span>
+                        </div>
+                        <div class="timestamp">12:26:23.006 - offerer</div>
+                        <div class="message">Connection state changed to: connected</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="RTC">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>RTC</h3>
+                            <span class="protocol-badge protocol-RTC">RTC</span>
+                        </div>
+                        <div class="timestamp">12:26:23.006 - answerer</div>
+                        <div class="message">Connection state changed to: connected</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:23.008 - offerer</div>
+                        <div class="message">Data channel opened</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:23.008 - answerer</div>
+                        <div class="message">Data channel received: chat</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:27.058 - answerer</div>
+                        <div class="message">Sending message: hi</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:27.059 - offerer</div>
+                        <div class="message">Received message: hi</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:30.020 - answerer</div>
+                        <div class="message">Sending message: how are you</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:30.021 - offerer</div>
+                        <div class="message">Received message: how are you</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:34.710 - offerer</div>
+                        <div class="message">Sending message: good</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:34.712 - answerer</div>
+                        <div class="message">Received message: good</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:36.960 - offerer</div>
+                        <div class="message">User requested exit</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item left data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-offerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:36.961 - offerer</div>
+                        <div class="message">Data channel closed</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="timeline-item right data-protocol="DATACHANNEL">
+                    <div class="timeline-content source-answerer">
+                        <div class="protocol-heading">
+                            <h3>DATACHANNEL</h3>
+                            <span class="protocol-badge protocol-DATACHANNEL">DATACHANNEL</span>
+                        </div>
+                        <div class="timestamp">12:26:36.961 - answerer</div>
+                        <div class="message">Data channel closed</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            
+            <script>
+                // Filter events by protocol
+                document.querySelectorAll('.filter-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Update active button
+                        document.querySelectorAll('.filter-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        button.classList.add('active');
+                        
+                        const protocol = button.dataset.protocol;
+                        
+                        // Show/hide timeline items
+                        document.querySelectorAll('.timeline-item').forEach(item => {
+                            if (protocol === 'all' || item.dataset.protocol === protocol) {
+                                item.classList.remove('hidden');
+                            } else {
+                                item.classList.add('hidden');
+                            }
+                        });
+                    });
+                });
+                
+                // Toggle SDP details
+                function toggleDetails(button) {
+                    const details = button.nextElementSibling;
+                    if (details.style.display === 'block') {
+                        details.style.display = 'none';
+                        button.textContent = 'Show SDP details';
+                    } else {
+                        details.style.display = 'block';
+                        button.textContent = 'Hide SDP details';
+                    }
+                }
+            </script>
+        </body>
+        </html>
+        

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebRTC Transport Layer Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        #videoSection {
+            margin: 20px 0;
+            text-align: center;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            border: 1px solid #ddd;
+            background-color: #000;
+        }
+        #controls {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 8px 15px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #message {
+            width: 70%;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #log {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+        .note {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffffcc;
+            border-left: 6px solid #ffeb3b;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebRTC Transport Layer Analysis</h1>
+    
+    <div id="videoSection">
+        <video id="video" autoplay playsinline></video>
+    </div>
+    
+    <div id="controls">
+        <button id="startButton">Start Connection</button>
+        <button id="stopButton" disabled>Stop Connection</button>
+        <div style="margin-top: 15px;">
+            <input type="text" id="message" placeholder="Type a message to send">
+            <button id="sendButton" disabled>Send</button>
+            <button id="sendBulkButton" disabled>Send 10 Messages</button>
+        </div>
+    </div>
+    
+    <div class="status">
+        <p><strong>Connection Status:</strong> <span id="connectionStatus">Not Connected</span></p>
+        <p><strong>ICE Connection Status:</strong> <span id="iceStatus">New</span></p>
+        <p><strong>Data Channel Status:</strong> <span id="channelStatus">None</span></p>
+    </div>
+    
+    <div class="note">
+        <p><strong>Analysis Tips:</strong> Open Wireshark and filter with <code>udp</code> to observe the WebRTC packets.
+        Look for STUN packets during connection establishment, DTLS for the security handshake, RTP/RTCP for video streaming,
+        and SCTP for data channel messages.</p>
+    </div>
+    
+    <div id="log"></div>
+    
+    <script>
+        // UI elements
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const sendButton = document.getElementById('sendButton');
+        const sendBulkButton = document.getElementById('sendBulkButton');
+        const messageInput = document.getElementById('message');
+        const video = document.getElementById('video');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const iceStatus = document.getElementById('iceStatus');
+        const channelStatus = document.getElementById('channelStatus');
+        const log = document.getElementById('log');
+        
+        // WebRTC variables
+        let pc = null;
+        let dataChannel = null;
+        
+        // Add log entry
+        function addLog(message, type = '') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.innerHTML = `<span style="color:#888">${timestamp}</span> ${type ? '<span style="color:' + getTypeColor(type) + '">[' + type + ']</span> ' : ''}${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function getTypeColor(type) {
+            switch(type) {
+                case 'INFO': return '#2196F3';
+                case 'SEND': return '#4CAF50';
+                case 'RECV': return '#9C27B0';
+                case 'ERROR': return '#F44336';
+                default: return '#000';
+            }
+        }
+        
+        // Update UI status
+        function updateStatus() {
+            if (!pc) {
+                connectionStatus.textContent = 'Not Connected';
+                iceStatus.textContent = 'New';
+                channelStatus.textContent = 'None';
+                return;
+            }
+            
+            connectionStatus.textContent = pc.connectionState || 'Unknown';
+            iceStatus.textContent = pc.iceConnectionState || 'Unknown';
+            
+            if (!dataChannel) {
+                channelStatus.textContent = 'None';
+            } else {
+                channelStatus.textContent = dataChannel.readyState || 'Unknown';
+            }
+        }
+        
+        // Start WebRTC connection
+        startButton.addEventListener('click', async () => {
+            startButton.disabled = true;
+            
+            try {
+                addLog('Creating RTCPeerConnection', 'INFO');
+                
+                // Create peer connection
+                pc = new RTCPeerConnection({
+                    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+                });
+                
+                // Add event handlers
+                pc.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        addLog(`New ICE candidate: ${event.candidate.candidate.substring(0, 50)}...`, 'INFO');
+                    }
+                };
+                
+                pc.oniceconnectionstatechange = () => {
+                    addLog(`ICE connection state changed to: ${pc.iceConnectionState}`, 'INFO');
+                    updateStatus();
+                    
+                    if (pc.iceConnectionState === 'connected') {
+                        stopButton.disabled = false;
+                    }
+                };
+                
+                pc.onconnectionstatechange = () => {
+                    addLog(`Connection state changed to: ${pc.connectionState}`, 'INFO');
+                    updateStatus();
+                };
+                
+                pc.ontrack = (event) => {
+                    addLog(`Track received: ${event.track.kind}`, 'INFO');
+                    if (event.track.kind === 'video') {
+                        video.srcObject = event.streams[0];
+                    }
+                };
+                
+                // Create data channel
+                dataChannel = pc.createDataChannel('transport-test');
+                addLog('Created data channel: transport-test', 'INFO');
+                
+                dataChannel.onopen = () => {
+                    addLog('Data channel opened', 'INFO');
+                    sendButton.disabled = false;
+                    sendBulkButton.disabled = false;
+                    updateStatus();
+                };
+                
+                dataChannel.onclose = () => {
+                    addLog('Data channel closed', 'INFO');
+                    sendButton.disabled = true;
+                    sendBulkButton.disabled = true;
+                    updateStatus();
+                };
+                
+                dataChannel.onmessage = (event) => {
+                    addLog(`Received: ${event.data}`, 'RECV');
+                };
+                
+                // Handle unknown data channels
+                pc.ondatachannel = (event) => {
+                    addLog(`New data channel: ${event.channel.label}`, 'INFO');
+                    
+                    event.channel.onmessage = (e) => {
+                        addLog(`Received (${event.channel.label}): ${e.data}`, 'RECV');
+                    };
+                };
+                
+                // Add transceivers to receive video
+                pc.addTransceiver('video', { direction: 'recvonly' });
+                addLog('Added video transceiver', 'INFO');
+                
+                // Create offer
+                addLog('Creating offer', 'INFO');
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                
+                // Send offer to server
+                addLog('Sending offer to server', 'INFO');
+                const response = await fetch('/offer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sdp: pc.localDescription.sdp,
+                        type: pc.localDescription.type
+                    })
+                });
+                
+                // Get answer from server
+                const answer = await response.json();
+                addLog('Received answer from server', 'INFO');
+                
+                // Set remote description
+                await pc.setRemoteDescription(answer);
+                addLog('Set remote description', 'INFO');
+                
+            } catch (e) {
+                addLog(`Error: ${e.message}`, 'ERROR');
+                console.error(e);
+                startButton.disabled = false;
+            }
+            
+            updateStatus();
+        });
+        
+        // Send a message
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message && dataChannel && dataChannel.readyState === 'open') {
+                dataChannel.send(message);
+                addLog(`Sent: ${message}`, 'SEND');
+                messageInput.value = '';
+            }
+        });
+        
+        // Send multiple messages
+        sendBulkButton.addEventListener('click', () => {
+            if (dataChannel && dataChannel.readyState === 'open') {
+                addLog('Sending 10 test messages', 'INFO');
+                for (let i = 1; i <= 10; i++) {
+                    const message = `Test message ${i} of 10`;
+                    dataChannel.send(message);
+                    addLog(`Sent: ${message}`, 'SEND');
+                }
+            }
+        });
+        
+        // Stop connection
+        stopButton.addEventListener('click', () => {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+            }
+            
+            if (dataChannel) {
+                dataChannel.close();
+                dataChannel = null;
+            }
+            
+            if (pc) {
+                pc.close();
+                pc = null;
+            }
+            
+            addLog('Connection stopped', 'INFO');
+            updateStatus();
+            
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            sendButton.disabled = true;
+            sendBulkButton.disabled = true;
+        });
+    </script>
+</body>
+</html>
