@@ -148,7 +148,7 @@ Analyze the layered approach in WebRTC:
 
 **Reflection Question:** How does this layered approach allow flexibility and reuse of standard protocols?
 
-## Additional Learning Resources
+## Online Learning Resources
 
 The following resources will help deepen your understanding of WebRTC concepts:
 
